@@ -24,7 +24,7 @@ const server = net.createServer((socket) => {
 
         if(fs.existsSync(filePath)){
             const file = fs.readFileSync(filePath);
-            socket.write(makeResponse("200 Ok", "text/plain", file.length, file));
+            socket.write(makeResponse("200 Ok", "application/octet-stream", file.length, file));
         }
         else socket.write(makeResponse("404 Not Found"));
         }
