@@ -34,7 +34,7 @@ const server = net.createServer((socket) => {
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
 
-        console.log(fileName, data.toString());
+        console.log(fileName);
         }
         else socket.write(makeResponse("404 Not Found"));
         socket.end();
