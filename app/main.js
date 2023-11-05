@@ -88,7 +88,7 @@ function checkRoute(data, path, method){
     const fullPath = extractPath(data);
     const arr = fullPath.split("/");
     const hasPath = fullPath.split("/").length === 2 ? fullPath === path : fullPath.startsWith(path);
-    console.log(fullPath, arr, path, hasPath);
+    console.log(fullPath, arr, path, hasPath, fullPath.startsWith(path));
 
     return hasPath && extractMethod(data) === method; 
 };
