@@ -9,7 +9,7 @@ const directory = args[0] === '--directory' ? args[1] : __dirname;
 
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
-        console.log(checkRoute(data, "echo", method.GET));
+        console.log(checkRoute(data, "/echo", method.GET));
 
         if(checkRoute(data, "/", method.GET)) socket.write(makeResponse("200 Ok"));
         else if(checkRoute(data, "/user-agent", method.GET)){
@@ -87,7 +87,7 @@ function searchHeader(name, data){
 }
 
 function checkRoute(data, path, method){
-    return (extractPath(data) === path || extractPath(data).includes(path)) && extractMethod(data) === method; 
+    return extractPath(data).split("/")[0] === path && extractMethod(data) === method; 
 };
 
 function makeResponse(code, type, length, body){
