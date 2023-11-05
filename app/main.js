@@ -9,8 +9,6 @@ const directory = args[0] === '--directory' ? args[1] : __dirname;
 
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
-        console.log(checkRoute(data, "/echo", method.GET));
-
         if(checkRoute(data, "/", method.GET)) socket.write(makeResponse("200 Ok"));
         else if(checkRoute(data, "/user-agent", method.GET)){
         const userAgent = searchHeader("User-Agent:", data);
