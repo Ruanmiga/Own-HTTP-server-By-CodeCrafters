@@ -34,7 +34,13 @@ const server = net.createServer((socket) => {
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
         const fileContent = extractBody(data);
-        console.log(fileContent);
+        
+        try{
+            fs.writeFileSync(filePath, fileContent);
+            socket.write(makeResponse("201 Created"));
+        }catch(err){
+            socket.write(makeResponse("404 Not Found"));
+        }
         }
         else socket.write(makeResponse("404 Not Found"));
         socket.end();
