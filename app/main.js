@@ -85,7 +85,7 @@ function searchHeader(name, data){
 }
 
 function checkRoute(data, path, method){
-    return (extractPath(data) === path || extractPath(data).startsWith(path)) && extractMethod(data) === method; 
+    return (extractPath(data) === path || extractPath(data).includes(path)) && extractMethod(data) === method; 
 };
 
 function makeResponse(code, type, length, body){
