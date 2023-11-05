@@ -2,15 +2,14 @@ const net = require("net");
 const{ join }  = require("path");
 const fs = require("fs");
 
+const method = {GET: "GET", POST: "POST"};
+
 const args = process.argv.slice(2);
 const directory = args[0] === '--directory' ? args[1] : __dirname;
 
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
-        const path = extractPath(data);
-        const method = extractMethod(data);
-
-        if(path === "/" && method === "GET") socket.write(makeResponse("200 Ok"));
+        if(checkRoute(data, "/", method.GET)) socket.write(makeResponse("200 Ok"));
         else if(path === "/user-agent" && method === "GET"){
         const userAgent = searchHeader("User-Agent:", data);
         socket.write(makeResponse("200 Ok", "text/plain", userAgent.length, userAgent));
@@ -80,12 +79,14 @@ function extractBody(data){
 function searchHeader(name, data){
      const headers = data.toString().split("\r\n");
         for(let i = 0; i < headers.length; i++){
-            if(headers[i].includes(name)){
-                return headers[i].split(" ")[1];
-            }
+            if(headers[i].includes(name)) return headers[i].split(" ")[1];
         }
     return null;
 }
+
+function checkRoute(data, path, method){
+    return extractPath(data) === path && extractMethod(data) === method; 
+};
 
 function makeResponse(code, type, length, body){
     let response = "";
