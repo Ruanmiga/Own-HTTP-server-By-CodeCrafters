@@ -61,7 +61,8 @@ function extractPath(data){
 }
 
 function extractParams(data, paramIndex){
-    const params = extractPath(data).split("/").slice(1);
+    const params = extractPath(data).split("/").slice(2);
+    console.log(params);
     if(paramIndex === -1) return params.join("/");
     else return params[paramIndex];
 }
