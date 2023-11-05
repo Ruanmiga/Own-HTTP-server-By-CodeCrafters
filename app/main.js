@@ -30,7 +30,7 @@ const server = net.createServer((socket) => {
         }
         }
         else if(checkRoute(data, "/files", method.POST)){
-        const fileName = path.substring(7, path.length);
+        const fileName = extractParams(data, -1);
         const filePath = join(directory, fileName);
         const fileContent = extractBody(data);
         
@@ -62,7 +62,6 @@ function extractPath(data){
 
 function extractParams(data, paramIndex){
     const params = extractPath(data).split("/").slice(2);
-    console.log(params);
     if(paramIndex === -1) return params.join("/");
     else return params[paramIndex];
 }
