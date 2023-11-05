@@ -87,7 +87,10 @@ function searchHeader(name, data){
 }
 
 function checkRoute(data, path, method){
-    return extractPath(data).split("/")[0] === path && extractMethod(data) === method; 
+    const fullPath = extractPath(data);
+    const fullPathArray = fullPath.split("/");
+    console.log(fullPathArray);
+    return extractPath(data).split("/") === path && extractMethod(data) === method; 
 };
 
 function makeResponse(code, type, length, body){
