@@ -88,8 +88,7 @@ function checkRoute(data, path, method){
     const fullPath = extractPath(data);
     const hasPath = fullPath.length === 1 ? fullPath === path : fullPath.includes(path);
 
-    console.log(hasPath);
-    return extractPath(data).split("/") === path && extractMethod(data) === method; 
+    return hasPath && extractMethod(data) === method; 
 };
 
 function makeResponse(code, type, length, body){
