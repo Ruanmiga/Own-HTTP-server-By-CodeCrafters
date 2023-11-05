@@ -8,7 +8,9 @@ const directory = args[0] === '--directory' ? args[1] : __dirname;
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
         const path = extractPath(data);
-
+        const method = extractMethod(data);
+        console.log(method);
+        
         if(path === "/") socket.write(makeResponse("200 Ok"));
         else if(path === "/user-agent"){
         const userAgent = searchHeader("User-Agent:", data);
@@ -39,6 +41,10 @@ const server = net.createServer((socket) => {
 });
 
 server.listen(4221, "localhost");
+
+function extractMethod(data){
+    return (data.toString().split("\r\n")[0]).split(" ")[0];
+}
 
 function extractPath(data){
     return (data.toString().split("\r\n")[0]).split(" ")[1];
