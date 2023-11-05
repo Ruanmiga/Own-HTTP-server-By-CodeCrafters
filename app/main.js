@@ -6,9 +6,9 @@ const server = net.createServer((socket) => {
         if(path === "/") {
         socket.write("HTTP/1.1 200 OK\r\n\r\n");
         }else if(path === "/user-agent"){
-        const userAgent = (data.toString().split("\r\n")[4]).split(" ")[1];
+        const userAgent = searchHeader("User-Agent:", data);
         console.log(userAgent);
-        
+
         socket.write("HTTP/1.1 200 OK\r\n");
         socket.write("Content-Type: text/plain\r\n");
         socket.write("Content-Length: " + userAgent.length + "\r\n\r\n")
@@ -33,3 +33,13 @@ const server = net.createServer((socket) => {
 });
 
 server.listen(4221, "localhost");
+
+function searchHeader(name, data){
+     const headers = data.toString().split("\r\n");
+        for(let i = 0; i < headers.length; i++){
+            if(headers[i].includes(name)){
+                return headers[i].split(" ")[1];
+            }
+        }
+    return null;
+}
