@@ -6,7 +6,7 @@ const server = net.createServer((socket) => {
         if(path === "/") {
         socket.write("HTTP/1.1 200 OK\r\n\r\n");
         }else if(path.includes("echo")){
-        const param = path.substring(path.indexOf("/"), path.length - 1);
+        const param = path.substring(5, path.length);
         console.log(param);
         socket.write("HTTP/1.1 200 OK\r\n");
         socket.write("Content-Type: text/plain\r\n");
