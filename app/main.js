@@ -86,9 +86,9 @@ function searchHeader(name, data){
 
 function checkRoute(data, path, method){
     const fullPath = extractPath(data);
-    const hasPath = fullPath.length === 1 ? fullPath === path : fullPath.startsWith(path);
+    const hasPath = fullPath.split("/").length === 1 ? fullPath === path : fullPath.startsWith(path);
     console.log(fullPath, path, hasPath);
-    
+
     return hasPath && extractMethod(data) === method; 
 };
 
