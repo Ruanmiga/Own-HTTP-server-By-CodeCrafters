@@ -5,6 +5,12 @@ const server = net.createServer((socket) => {
         const path = (data.toString().split("\r\n")[0]).split(" ")[1];
         if(path === "/") {
         socket.write("HTTP/1.1 200 OK\r\n\r\n");
+        }else if(path.includes("echo")){
+        const param = path.split("/")[2];
+        socket.write("HTTP/1.1 200 OK\r\n\r\n");
+        socket.write("Content-Type: text/plain\r\n\r\n");
+        socket.write("Content-Length: " + param.length + "\r\n\r\n")
+        socket.write(param);
         } else {
         socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
         }
