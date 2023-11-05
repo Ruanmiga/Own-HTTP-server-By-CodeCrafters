@@ -15,11 +15,11 @@ const server = net.createServer((socket) => {
         socket.write(makeResponse("200 Ok", "text/plain", userAgent.length, userAgent));
         }
         else if(checkRoute(data, "/echo", method.GET)){
-        const param = path.substring(6, path.length);
+        const param = extractParams(data, -1);
         socket.write(makeResponse("200 Ok", "text/plain", param.length, param));
         }
         else if(checkRoute(data, "/files", method.GET)){
-        const fileName = path.substring(7, path.length);
+        const fileName = extractParams(data, -1);
         const filePath = join(directory, fileName);
 
         try{
@@ -60,6 +60,12 @@ function extractPath(data){
     return (data.toString().split("\r\n")[0]).split(" ")[1];
 }
 
+function extractParams(data, paramIndex){
+    const params = extractPath(data).split("/").slice(1);
+    if(paramIndex === -1) return params.join("/");
+    else return params[paramIndex];
+}
+
 function extractHeaders(data){
     return data.toString().split("\r\n");
 }
@@ -87,8 +93,6 @@ function searchHeader(name, data){
 function checkRoute(data, path, method){
     const fullPath = extractPath(data);
     const hasPath = fullPath.substring(0, fullPath.indexOf("/", 1) === -1 ? fullPath.length : fullPath.indexOf("/", 1)) === path;
-    console.log(fullPath, fullPath.indexOf("/", 1))
-    console.log(fullPath.substring(0, fullPath.indexOf("/", 1) === -1 ? fullPath.length : fullPath.indexOf("/", 1)));
     return hasPath && extractMethod(data) === method; 
 };
 
