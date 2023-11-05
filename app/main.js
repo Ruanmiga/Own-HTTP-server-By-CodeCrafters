@@ -45,7 +45,7 @@ function makeResponse(code, type, length, body){
     let response = "";
     if(code) response += "HTTP/1.1 " + code + "\r\n";
     if(type) response += "Content-Type: " + type + "\r\n";
-    if(lenght) response += "Content-Length: " + length + "\r\n";
+    if(length) response += "Content-Length: " + length + "\r\n";
     if(body) response += "\r\n" + body;
     else response += "\r\n";
 
