@@ -1,7 +1,9 @@
 const net = require("net");
+const{ join }  = require("path");
+const fs = require("fs");
 
 const args = process.argv.slice(2);
-console.log(args);
+const directory = args[0] === '--directory' ? args[1] : __dirname;
 
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
@@ -15,7 +17,18 @@ const server = net.createServer((socket) => {
         else if(path.includes("echo")){
         const param = path.substring(6, path.length);
         socket.write(makeResponse("200 Ok", "text/plain", param.length, param));
-        } else socket.write(makeResponse("404 Not Found"));
+        }
+        else if(path === "file"){
+        const fileName = path.substring(6, path.length);
+        const filePath = join(directory, fileName);
+
+        if(fs.existsSync(filePath)){
+            const file = fs.readFileSync(filePath);
+            socket.write(makeResponse("200 Ok", "text/plain", file.length, file));
+        }
+        else socket.write(makeResponse("404 Not Found"));
+        }
+        else socket.write(makeResponse("404 Not Found"));
         socket.end();
     });
     socket.on("close", () => {
