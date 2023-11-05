@@ -9,18 +9,17 @@ const server = net.createServer((socket) => {
     socket.on("data", (data) => {
         const path = extractPath(data);
         const method = extractMethod(data);
-        console.log(method);
-        
-        if(path === "/") socket.write(makeResponse("200 Ok"));
-        else if(path === "/user-agent"){
+
+        if(path === "/" && method === "GET") socket.write(makeResponse("200 Ok"));
+        else if(path === "/user-agent" && method === "GET"){
         const userAgent = searchHeader("User-Agent:", data);
         socket.write(makeResponse("200 Ok", "text/plain", userAgent.length, userAgent));
         }
-        else if(path.includes("echo")){
+        else if(path.includes("echo") && method === "GET"){
         const param = path.substring(6, path.length);
         socket.write(makeResponse("200 Ok", "text/plain", param.length, param));
         }
-        else if(path.includes("files")){
+        else if(path.includes("files") && method === "GET"){
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
 
@@ -30,6 +29,12 @@ const server = net.createServer((socket) => {
         }catch(err){
             socket.write(makeResponse("404 Not Found"));
         }
+        }
+        else if(path.includes("files") && method === "POST"){
+        const fileName = path.substring(7, path.length);
+        const filePath = join(directory, fileName);
+
+        console.log(fileName, filePath, data.toString());
         }
         else socket.write(makeResponse("404 Not Found"));
         socket.end();
