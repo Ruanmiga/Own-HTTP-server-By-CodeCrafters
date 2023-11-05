@@ -2,28 +2,17 @@ const net = require("net");
 
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
-        const path = (data.toString().split("\r\n")[0]).split(" ")[1];
-        if(path === "/") {
-        socket.write("HTTP/1.1 200 OK\r\n\r\n");
-        }
+        const path = extractPath(data);
+
+        if(path === "/") socket.write(makeResponse("200 Ok"));
         else if(path === "/user-agent"){
         const userAgent = searchHeader("User-Agent:", data);
-
-        socket.write("HTTP/1.1 200 OK\r\n");
-        socket.write("Content-Type: text/plain\r\n");
-        socket.write("Content-Length: " + userAgent.length + "\r\n\r\n")
-        socket.write(userAgent);
+        socket.write(makeResponse("200 Ok", "text/plain", userAgent.length, userAgent));
         }
         else if(path.includes("echo")){
         const param = path.substring(6, path.length);
-        
-        socket.write("HTTP/1.1 200 OK\r\n");
-        socket.write("Content-Type: text/plain\r\n");
-        socket.write("Content-Length: " + param.length + "\r\n\r\n")
-        socket.write(param);
-        } else {
-        socket.write("HTTP/1.1 404 Not Found\r\n\r\n");
-        }
+        socket.write(makeResponse("200 Ok", "text/plain", param.length, param));
+        } else socket.write(makeResponse("404 Not Found"));
         socket.end();
     });
     socket.on("close", () => {
@@ -34,6 +23,14 @@ const server = net.createServer((socket) => {
 
 server.listen(4221, "localhost");
 
+function extractPath(data){
+    return (data.toString().split("\r\n")[0]).split(" ")[1];
+}
+
+function extractHeaders(data){
+    return data.toString().split("\r\n");
+}
+
 function searchHeader(name, data){
      const headers = data.toString().split("\r\n");
         for(let i = 0; i < headers.length; i++){
@@ -42,4 +39,15 @@ function searchHeader(name, data){
             }
         }
     return null;
+}
+
+function makeResponse(code, type, length, body){
+    let response = "";
+    if(code) response += "HTTP/1.1 " + code + "\r\n";
+    if(type) response += "Content-Type: " + type + "\r\n";
+    if(lenght) response += "Content-Length: " + length + "\r\n";
+    if(body) response += "\r\n" + body;
+    else response += "\r\n";
+
+    return response;
 }
