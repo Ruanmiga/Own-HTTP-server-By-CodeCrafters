@@ -88,8 +88,9 @@ function searchHeader(name, data){
 
 function checkRoute(data, path, method){
     const fullPath = extractPath(data);
-    const fullPathArray = fullPath.split("/");
-    console.log(fullPathArray);
+    const hasPath = fullPath.length === 1 ? fullPath === path : fullPath.includes(path);
+
+    console.log(hasPath);
     return extractPath(data).split("/") === path && extractMethod(data) === method; 
 };
 
