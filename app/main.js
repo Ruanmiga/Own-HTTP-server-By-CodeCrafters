@@ -10,15 +10,15 @@ const directory = args[0] === '--directory' ? args[1] : __dirname;
 const server = net.createServer((socket) => {
     socket.on("data", (data) => {
         if(checkRoute(data, "/", method.GET)) socket.write(makeResponse("200 Ok"));
-        else if(path === "/user-agent" && method === "GET"){
+        else if(checkRoute(data, "/user-agent", method.GET)){
         const userAgent = searchHeader("User-Agent:", data);
         socket.write(makeResponse("200 Ok", "text/plain", userAgent.length, userAgent));
         }
-        else if(path.includes("echo") && method === "GET"){
+        else if(checkRoute(data, "/echo", method.GET)){
         const param = path.substring(6, path.length);
         socket.write(makeResponse("200 Ok", "text/plain", param.length, param));
         }
-        else if(path.includes("files") && method === "GET"){
+        else if(checkRoute(data, "/files", method.GET)){
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
 
@@ -29,7 +29,7 @@ const server = net.createServer((socket) => {
             socket.write(makeResponse("404 Not Found"));
         }
         }
-        else if(path.includes("files") && method === "POST"){
+        else if(checkRoute(data, "/files", method.POST)){
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
         const fileContent = extractBody(data);
@@ -85,7 +85,7 @@ function searchHeader(name, data){
 }
 
 function checkRoute(data, path, method){
-    return extractPath(data) === path && extractMethod(data) === method; 
+    return (extractPath(data) === path || extractPath(data).startsWith(path)) && extractMethod(data) === method; 
 };
 
 function makeResponse(code, type, length, body){
