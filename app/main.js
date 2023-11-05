@@ -18,7 +18,7 @@ const server = net.createServer((socket) => {
         const param = path.substring(6, path.length);
         socket.write(makeResponse("200 Ok", "text/plain", param.length, param));
         }
-        else if(path === "files"){
+        else if(path.includes("files")){
             console.log(directory);
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
