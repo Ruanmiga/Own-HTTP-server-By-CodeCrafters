@@ -33,8 +33,8 @@ const server = net.createServer((socket) => {
         else if(path.includes("files") && method === "POST"){
         const fileName = path.substring(7, path.length);
         const filePath = join(directory, fileName);
-
-        console.log(fileName);
+        const fileContent = extractBody(data);
+        console.log(fileContent);
         }
         else socket.write(makeResponse("404 Not Found"));
         socket.end();
@@ -57,6 +57,18 @@ function extractPath(data){
 
 function extractHeaders(data){
     return data.toString().split("\r\n");
+}
+
+function extractBody(data){
+    const headers = extractHeaders(data);
+    let body = "";
+    for(let i = 0; i < headers.length; i++){
+        if(headers[i] === ""){
+            body = headers.slice(i + 1, headers.length).join("\r\n");
+            break;
+        }
+    }
+    return body;
 }
 
 function searchHeader(name, data){
