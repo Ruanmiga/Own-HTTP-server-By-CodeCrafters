@@ -5,9 +5,9 @@ const server = net.createServer((socket) => {
         const path = (data.toString().split("\r\n")[0]).split(" ")[1];
         if(path === "/") {
         socket.write("HTTP/1.1 200 OK\r\n\r\n");
-        }else if(path === "/user-agent"){
+        }
+        else if(path === "/user-agent"){
         const userAgent = searchHeader("User-Agent:", data);
-        console.log(userAgent);
 
         socket.write("HTTP/1.1 200 OK\r\n");
         socket.write("Content-Type: text/plain\r\n");
@@ -16,7 +16,7 @@ const server = net.createServer((socket) => {
         }
         else if(path.includes("echo")){
         const param = path.substring(6, path.length);
-        console.log(param);
+        
         socket.write("HTTP/1.1 200 OK\r\n");
         socket.write("Content-Type: text/plain\r\n");
         socket.write("Content-Length: " + param.length + "\r\n\r\n")
